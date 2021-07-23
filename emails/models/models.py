@@ -205,7 +205,7 @@ class MailMail(models.Model):
                         raise MailDeliveryException(value)
                     raise
 
-            if auto_commit is True:
-                self._cr.commit()
-        return super(className, self)._cart_update(self)
+                if auto_commit is True:
+                    self._cr.commit()
+            return True
 
