@@ -91,7 +91,7 @@ class MailMail(models.Model):
                         custom_param = "mail.catchall.domain.1"
                     except:
                         _logger.info('error: ', 90)
-                elif active_company == 2:
+                elif active_company.id == 2:
                     try:
                         custom_param = "mail.catchall.domain.2"
                     except:
