@@ -25,15 +25,11 @@ class MailMail(models.Model):
     _inherit = 'mail.mail'
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
-        print("""
-        
-        
-        
-        we are sending...
-        
-        
-        
-        """, self, '\n   ')
+        # add logging
+        _logger.info('----------------------------------------------------------------')
+        _logger.info('we are sending')
+        _logger.info('self: ', self)
+        _logger.info('--------------------------------------------------------------------')
 
         IrMailServer = self.env['ir.mail_server']
         IrAttachment = self.env['ir.attachment']
@@ -77,15 +73,12 @@ class MailMail(models.Model):
                 bounce_alias = ICP.get_param("mail.bounce.alias")
 
                 # Custom: differentiate catchall_domain per company
-                print("""
-                
-                
-                headers: 
-                
-                
-                """, self.env)
+                _logger.info('----------------------------------------------------------------')
+                _logger.info('under headers')
+                _logger.info('self: ', self.env)
+                _logger.info('--------------------------------------------------------------------')
 
-                active_company = self.env.active_id
+                active_company = False
                 if active_company.id == 1:
                     custom_param = "mail.catchall.domain.1"
                 elif active_company.id == 2:
