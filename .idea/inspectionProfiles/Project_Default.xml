@@ -1,0 +1,32 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <Languages>
+        <language minSize="76" name="Python" />
+      </Languages>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E501" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="server.odoo.addons.openacademy.controllers.*" />
+          <option value="odoo.models" />
+          <option value="odoo.fields" />
+          <option value="odoo.api" />
+          <option value="odoo.exceptions" />
+          <option value="polls.views.*" />
+          <option value="mysite.urls.*" />
+          <option value="scrapy" />
+          <option value="odoo._" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
