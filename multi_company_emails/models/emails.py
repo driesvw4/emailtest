@@ -104,7 +104,7 @@ class MailMail(models.Model):
 
                 # add logic for setting the reply_to emailadress (=catchalls) when not specified in template
                 if custom_param and not mail.reply_to:
-                    mail.reply_to = ICP.get_param("mail.catchall.alias") + ICP.get_param(custom_param)
+                    mail.reply_to = str(ICP.get_param("mail.catchall.alias")) + '@' + str(ICP.get_param(custom_param))
                 _logger.info('new_reply_to: %s', mail.reply_to)
 
                 _logger.info('custom param: %s', custom_param)
