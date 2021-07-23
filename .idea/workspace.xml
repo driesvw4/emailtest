@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ab548fe0-1589-4c81-81d6-1ba8e29b0afb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/multi_company_emails/models/emails.py" beforeDir="false" afterPath="$PROJECT_DIR$/multi_company_emails/models/emails.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/multi_company_emails/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/multi_company_emails/__manifest__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
