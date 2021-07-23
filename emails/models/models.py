@@ -1,6 +1,22 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+import ast
+import base64
+import datetime
+import logging
+import psycopg2
+import smtplib
+import threading
+import re
+
+from collections import defaultdict
+
+from odoo import _, api, fields, models
+from odoo import tools
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+
+_logger = logging.getLogger(__name__)
 
 
 class MailMail(models.Model):
