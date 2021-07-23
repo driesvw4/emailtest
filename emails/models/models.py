@@ -8,7 +8,7 @@ class MailMail(models.Model):
         facilities to queue and send new email messages.  """
     _inherit = 'mail.mail'
 
-    def _send(self, context, auto_commit=False, raise_exception=False, smtp_session=None):
+    def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
         print("""
         
         
