@@ -75,15 +75,27 @@ class MailMail(models.Model):
                 # Custom: differentiate catchall_domain per company
                 _logger.info('----------------------------------------------------------------')
                 _logger.info('under headers')
-                _logger.info('self: ', self.env)
+                _logger.info('model: ', mail.model,)
+                _logger.info('model: ', mail.res_id, )
+                _logger.info('model: ', mail.email_to, )
+                _logger.info('model: ', mail.email_from, )
                 _logger.info('--------------------------------------------------------------------')
 
                 active_company = False
-                if active_company.id == 1:
-                    custom_param = "mail.catchall.domain.1"
-                elif active_company.id == 2:
-                    custom_param = "mail.catchall.domain.2"
+                if active_company == 1:
+                    try:
 
+                        custom_param = "mail.catchall.domain.1"
+                    except:
+                        _logger.info('error: ', 90)
+                elif active_company == 2:
+                    try:
+                        custom_param = "mail.catchall.domain.2"
+                    except:
+                        _logger.info('error: ', 95)
+                else:
+                    custom_param = False
+                    
                 catchall_domain = ICP.get_param(custom_param)
 
                 if bounce_alias and catchall_domain:
