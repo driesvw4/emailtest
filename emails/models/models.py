@@ -81,10 +81,13 @@ class MailMail(models.Model):
                 _logger.info("getting the email_from: %s", mail.email_from)
                 _logger.info('--------------------------------------------------------------------')
 
-                active_company = False
+                original_record = self.env[str(mail.model)].sudo().search([
+                    ('id', '=', mail.res_id)], limit=1)
+                _logger.info('original record: %s', original_record)
+                active_company = original_record.company_id
+                _logger.info('original record_company_id: %s', active_company)
                 if active_company == 1:
                     try:
-
                         custom_param = "mail.catchall.domain.1"
                     except:
                         _logger.info('error: ', 90)
