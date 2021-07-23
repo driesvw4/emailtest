@@ -27,8 +27,8 @@ class MailMail(models.Model):
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
         # add logging
         _logger.info('----------------------------------------------------------------')
-        _logger.info('we are sending')
-        _logger.info('self: ', self)
+        _logger.info('we are sending, self:')
+        _logger.info(self)
         _logger.info('--------------------------------------------------------------------')
 
         IrMailServer = self.env['ir.mail_server']
@@ -75,10 +75,10 @@ class MailMail(models.Model):
                 # Custom: differentiate catchall_domain per company
                 _logger.info('----------------------------------------------------------------')
                 _logger.info('under headers')
-                _logger.info('model: ', mail.model,)
-                _logger.info('model: ', mail.res_id, )
-                _logger.info('model: ', mail.email_to, )
-                _logger.info('model: ', mail.email_from, )
+                _logger.info(mail.model)
+                _logger.info(mail.res_id)
+                _logger.info(mail.email_to)
+                _logger.info("getting the email_from: %s", mail.email_from)
                 _logger.info('--------------------------------------------------------------------')
 
                 active_company = False
@@ -95,7 +95,7 @@ class MailMail(models.Model):
                         _logger.info('error: ', 95)
                 else:
                     custom_param = False
-                    
+
                 catchall_domain = ICP.get_param(custom_param)
 
                 if bounce_alias and catchall_domain:
