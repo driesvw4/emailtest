@@ -17,7 +17,7 @@ class MailMail(models.Model):
         
         
         
-        """, self, '\n   ', context)
+        """, self, '\n   ')
 
         IrMailServer = self.env['ir.mail_server']
         IrAttachment = self.env['ir.attachment']
