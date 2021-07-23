@@ -85,28 +85,19 @@ class MailMail(models.Model):
                 custom_param = None
                 if active_company:
                     if active_company.id == 1:
-                        try:
                             custom_param = "mail.catchall.domain.1"
-                        except:
-                            custom_param = None
                     elif active_company.id == 2:
-                        try:
                             custom_param = "mail.catchall.domain.2"
-                        except:
-                            custom_param = None
                     elif active_company.id == 3:
-                        try:
                             custom_param = "mail.catchall.domain.3"
-                        except:
-                            custom_param = None
                     else:
                         custom_param = None
 
                 # add logic for setting the reply_to emailadress (=catchalls) when not specified in template
-                if custom_param and not mail.reply_to:
+                if custom_param and ICP.get_param("mail.catchall.domain") in mail.reply_to:
                     mail.reply_to = str(ICP.get_param("mail.catchall.alias")) + '@' + str(ICP.get_param(custom_param))
-                _logger.info('new_reply_to: %s', mail.reply_to)
 
+                _logger.info('new_reply_to: %s', mail.reply_to)
                 _logger.info('custom param: %s', custom_param)
                 catchall_domain = ICP.get_param(custom_param)
                 _logger.info('catchall domain: %s', catchall_domain)
