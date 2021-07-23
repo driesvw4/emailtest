@@ -7,10 +7,7 @@ import datetime
 import logging
 import psycopg2
 import smtplib
-import threading
 import re
-
-from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo import tools
@@ -25,12 +22,6 @@ class MailMail(models.Model):
     _inherit = 'mail.mail'
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
-        # add logging
-        _logger.info('----------------------------------------------------------------')
-        _logger.info('we are sending, self:')
-        _logger.info(self)
-        _logger.info('--------------------------------------------------------------------')
-
         IrMailServer = self.env['ir.mail_server']
         IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:
@@ -72,37 +63,53 @@ class MailMail(models.Model):
                 ICP = self.env['ir.config_parameter'].sudo()
                 bounce_alias = ICP.get_param("mail.bounce.alias")
 
-                # Custom: differentiate catchall_domain per company
+                # log info from the mail to make sure it is correct (this way it is logged in odoo.sh)
                 _logger.info('----------------------------------------------------------------')
-                _logger.info('under headers')
-                _logger.info(mail.model)
-                _logger.info(mail.res_id)
-                _logger.info(mail.email_to)
+                _logger.info('original_model: %s', mail.model)
+                _logger.info('original_id: %s', mail.res_id)
+                _logger.info('original_email_to: %s', mail.email_to)
+                _logger.info('original_reply_to: %s', mail.reply_to)
                 _logger.info("getting the email_from: %s", mail.email_from)
                 _logger.info('--------------------------------------------------------------------')
 
+                # get the origin record and model: from where the email is created
                 original_record = self.env[str(mail.model)].sudo().search([
                     ('id', '=', mail.res_id)], limit=1)
                 _logger.info('original record: %s', original_record)
+                # get the company_id of this record
                 active_company = original_record.company_id
                 _logger.info('original record_company_id: %s', active_company)
-                if active_company.id == 1:
-                    try:
-                        custom_param = "mail.catchall.domain.1"
-                    except:
-                        _logger.info('error: ', 90)
-                elif active_company.id == 2:
-                    try:
-                        custom_param = "mail.catchall.domain.2"
-                    except:
-                        _logger.info('error: ', 95)
-                else:
-                    custom_param = False
-                _logger.info('custom param: %s', custom_param)
 
+                # logic for setting custom_param (= original mail.catchall.domain)
+                if active_company:
+                    if active_company.id == 1:
+                        try:
+                            custom_param = "mail.catchall.domain.1"
+                        except:
+                            custom_param = False
+                    elif active_company.id == 2:
+                        try:
+                            custom_param = "mail.catchall.domain.2"
+                        except:
+                            custom_param = False
+                    elif active_company.id == 3:
+                        try:
+                            custom_param = "mail.catchall.domain.3"
+                        except:
+                            custom_param = False
+                    else:
+                        custom_param = False
+
+                # add logic for setting the reply_to emailadress (=catchalls) when not specified in template
+                if custom_param and not mail.reply_to:
+                    mail.reply_to = ICP.get_param("mail.catchall.alias") + ICP.get_param(custom_param)
+                _logger.info('new_reply_to: %s', mail.reply_to)
+
+                _logger.info('custom param: %s', custom_param)
                 catchall_domain = ICP.get_param(custom_param)
                 _logger.info('catchall domain: %s', catchall_domain)
 
+                   # _________________________customization stops_______________________________
 
                 if bounce_alias and catchall_domain:
                     if mail.mail_message_id.is_thread_message():
