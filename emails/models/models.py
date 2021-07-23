@@ -98,8 +98,11 @@ class MailMail(models.Model):
                         _logger.info('error: ', 95)
                 else:
                     custom_param = False
+                _logger.info('custom param: %s', custom_param)
 
                 catchall_domain = ICP.get_param(custom_param)
+                _logger.info('catchall domain: %s', catchall_domain)
+
 
                 if bounce_alias and catchall_domain:
                     if mail.mail_message_id.is_thread_message():
