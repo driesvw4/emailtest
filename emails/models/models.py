@@ -86,7 +86,7 @@ class MailMail(models.Model):
                 _logger.info('original record: %s', original_record)
                 active_company = original_record.company_id
                 _logger.info('original record_company_id: %s', active_company)
-                if active_company == 1:
+                if active_company.id == 1:
                     try:
                         custom_param = "mail.catchall.domain.1"
                     except:
