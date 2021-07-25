@@ -64,15 +64,6 @@ class MailMail(models.Model):
                 bounce_alias = ICP.get_param("mail.bounce.alias")
 
                 # _________________________Customization starts_______________________
-                # log info from the mail to make sure it is correct (this way it is logged in odoo.sh)
-                _logger.info('----------------------------------------------------------------')
-                _logger.info('original_model: %s', mail.model)
-                _logger.info('original_id: %s', mail.res_id)
-                _logger.info('original_email_to: %s', mail.email_to)
-                _logger.info('original_reply_to: %s', mail.reply_to)
-                _logger.info("getting the email_from: %s", mail.email_from)
-                _logger.info('--------------------------------------------------------------------')
-
                 # get the origin record and model: from where the email is created; does not work when there is no
                 # original model (manually creating email)
                 original_record = None
@@ -89,6 +80,7 @@ class MailMail(models.Model):
                         custom_param = f'mail.catchall.domain.{active_company.id}'
                     else:
                         custom_param = None
+                # for if no model/record is set on the email
                 except KeyError:
                     custom_param = None
 
@@ -108,21 +100,10 @@ class MailMail(models.Model):
                         custom_param = "mail.catchall.domain"
 
                 catchall_domain = ICP.get_param(custom_param)
-                try:
-                    _logger.info('original record: %s', original_record)
-                    _logger.info('original record_company_id: %s', active_company)
-                    _logger.info('KeyError: no original model on email found')
-                    _logger.info('new_reply_to: %s', mail.reply_to)
-                    _logger.info('custom param: %s', custom_param)
-                    _logger.info('catchall domain: %s', catchall_domain)
-                except:
-                    _logger.info('something wrong')
 
-
-                # _________________________customization stops_______________________________
-                
-
+                # original line:
                 # catchall_domain = ICP.get_param("mail.catchall.domain")
+                # _________________________customization stops_______________________________
 
                 if bounce_alias and catchall_domain:
                     if mail.mail_message_id.is_thread_message():
