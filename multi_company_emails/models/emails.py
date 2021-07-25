@@ -101,6 +101,15 @@ class MailMail(models.Model):
                 # add logic for setting the reply_to email address (=catchalls) when not specified in template
                 if custom_param and ICP.get_param("mail.catchall.domain") in mail.reply_to:
                     mail.reply_to = str(ICP.get_param("mail.catchall.alias")) + '@' + str(ICP.get_param(custom_param))
+                else:
+                    if 'vesper' in mail.email_from:
+                        custom_param = "mail.catchall.domain.1"
+                    elif 'potato' in mail.email_from:
+                        custom_param = "mail.catchall.domain.2"
+                    elif 'tomfrost' in mail.email_from:
+                        custom_param = "mail.catchall.domain.3"
+                    else:
+                        custom_param = "mail.catchall.domain"
 
                 _logger.info('new_reply_to: %s', mail.reply_to)
                 _logger.info('custom param: %s', custom_param)
