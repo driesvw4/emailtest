@@ -62,7 +62,7 @@ class MailMail(models.Model):
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
                 bounce_alias = ICP.get_param("mail.bounce.alias")
-                """
+
                 # _________________________Customization starts_______________________
                 # log info from the mail to make sure it is correct (this way it is logged in odoo.sh)
                 _logger.info('----------------------------------------------------------------')
@@ -104,8 +104,8 @@ class MailMail(models.Model):
 
                 # _________________________customization stops_______________________________
                 
-                """
-                catchall_domain = ICP.get_param("mail.catchall.domain")
+
+                # catchall_domain = ICP.get_param("mail.catchall.domain")
                 _logger.info('catchall domain: %s', catchall_domain)
                 if bounce_alias and catchall_domain:
                     if mail.mail_message_id.is_thread_message():
