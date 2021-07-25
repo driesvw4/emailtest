@@ -73,29 +73,34 @@ class MailMail(models.Model):
                 _logger.info("getting the email_from: %s", mail.email_from)
                 _logger.info('--------------------------------------------------------------------')
 
-                # get the origin record and model: from where the email is created
-                original_record = self.env[str(mail.model)].sudo().search([
-                    ('id', '=', mail.res_id)], limit=1)
-                _logger.info('original record: %s', original_record)
-                # get the company_id of this record
-                active_company = original_record.company_id
-                _logger.info('original record_company_id: %s', active_company)
+                # get the origin record and model: from where the email is created; does not work when there is no
+                # original model (manually creating email)
+                try:
+                    # get the company_id of this record
+                    original_record = self.env[str(mail.model)].sudo().search([
+                        ('id', '=', mail.res_id)], limit=1)
+                    active_company = original_record.company_id
 
-                # logic for setting custom_param (= original mail.catchall.domain)
-                custom_param = None
-                if active_company:
-                    if active_company.id == 1:
+                    # logic for setting custom_param (= original mail.catchall.domain)
+                    custom_param = None
+                    if active_company:
+                        if active_company.id == 1:
                             custom_param = "mail.catchall.domain.1"
-                    elif active_company.id == 2:
+                        elif active_company.id == 2:
                             custom_param = "mail.catchall.domain.2"
-                    elif active_company.id == 3:
+                        elif active_company.id == 3:
                             custom_param = "mail.catchall.domain.3"
-                    else:
-                        custom_param = None
+                        else:
+                            custom_param = None
+                    _logger.info('original record: %s', original_record)
+                    _logger.info('original record_company_id: %s', active_company)
+                except KeyError:
+                    custom_param = None
+                    _logger.info('KeyError: no original model on email found')
 
                 # add logic for setting the reply_to email address (=catchalls) when not specified in template
-                # if custom_param and ICP.get_param("mail.catchall.domain") in mail.reply_to:
-                #     mail.reply_to = str(ICP.get_param("mail.catchall.alias")) + '@' + str(ICP.get_param(custom_param))
+                if custom_param and ICP.get_param("mail.catchall.domain") in mail.reply_to:
+                    mail.reply_to = str(ICP.get_param("mail.catchall.alias")) + '@' + str(ICP.get_param(custom_param))
 
                 _logger.info('new_reply_to: %s', mail.reply_to)
                 _logger.info('custom param: %s', custom_param)
