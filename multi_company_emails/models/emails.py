@@ -84,23 +84,17 @@ class MailMail(models.Model):
                     # logic for setting custom_param (= original mail.catchall.domain)
                     custom_param = None
                     if active_company:
-                        if active_company.id == 1:
-                            custom_param = "mail.catchall.domain.1"
-                        elif active_company.id == 2:
-                            custom_param = "mail.catchall.domain.2"
-                        elif active_company.id == 3:
-                            custom_param = "mail.catchall.domain.3"
-                        else:
-                            custom_param = None
-                    _logger.info('original record: %s', original_record)
-                    _logger.info('original record_company_id: %s', active_company)
+                        custom_param = f'mail.catchall.domain.{active_company.id}'
+                    else:
+                        custom_param = None
                 except KeyError:
                     custom_param = None
-                    _logger.info('KeyError: no original model on email found')
+
 
                 # add logic for setting the reply_to email address (=catchalls) when not specified in template
                 if custom_param and ICP.get_param("mail.catchall.domain") in mail.reply_to:
                     mail.reply_to = str(ICP.get_param("mail.catchall.alias")) + '@' + str(ICP.get_param(custom_param))
+                # Here we make a final attempt to determine with which header the email should be sent
                 else:
                     if 'vesper' in mail.email_from:
                         custom_param = "mail.catchall.domain.1"
@@ -111,16 +105,20 @@ class MailMail(models.Model):
                     else:
                         custom_param = "mail.catchall.domain"
 
+                catchall_domain = ICP.get_param(custom_param)
+
+                _logger.info('original record: %s', original_record)
+                _logger.info('original record_company_id: %s', active_company)
+                _logger.info('KeyError: no original model on email found')
                 _logger.info('new_reply_to: %s', mail.reply_to)
                 _logger.info('custom param: %s', custom_param)
-                
-                catchall_domain = ICP.get_param(custom_param)
+                _logger.info('catchall domain: %s', catchall_domain)
 
                 # _________________________customization stops_______________________________
                 
 
                 # catchall_domain = ICP.get_param("mail.catchall.domain")
-                _logger.info('catchall domain: %s', catchall_domain)
+
                 if bounce_alias and catchall_domain:
                     if mail.mail_message_id.is_thread_message():
                         headers['Return-Path'] = '%s+%d-%s-%d@%s' % (
